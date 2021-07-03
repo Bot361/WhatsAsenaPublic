@@ -60,7 +60,7 @@ if (config.WORKTYPE == 'private') {
             + '*◀️ ' + Lang.FROM + '*: ```' + (match[2] === '' ? config.LANG : match[2]) + '```\n'
             + '*🔎 ' + Lang.RESULT + ':* ```' + ceviri.text + '```');
         } else {
-            return await message.client.sendMessage(message.jid,Lang.TRANSLATE_ERROR,MessageType.text, {quoted: message.data})
+            return await message.client.sendMessage(message.jid,Lang.TRANSLATE_ERROR,MessageType.text)
         }
     }));
 
@@ -72,7 +72,7 @@ if (config.WORKTYPE == 'private') {
         }
 
         if(match[1] === undefined || match[2] == undefined || match[3] == undefined) {
-            return await message.client.sendMessage(message.jid,Lang.CURRENCY_ERROR,MessageType.text, {quoted: message.data});
+            return await message.client.sendMessage(message.jid,Lang.CURRENCY_ERROR,MessageType.text);
         }
         let opts = {
             amount: parseFloat(match[1]).toFixed(2).replace(/\.0+$/,''),
@@ -86,7 +86,7 @@ if (config.WORKTYPE == 'private') {
         }
         catch(err) {
             if (err instanceof ExchangeRatesError) 
-                await message.client.sendMessage(message.jid,Lang.INVALID_CURRENCY,MessageType.text, {quoted: message.data})
+                await message.client.sendMessage(message.jid,Lang.INVALID_CURRENCY,MessageType.text)
             else {
                 await message.client.sendMessage(message.jid,Lang.UNKNOWN_ERROR,MessageType.text)
                 console.log(err)
@@ -94,7 +94,7 @@ if (config.WORKTYPE == 'private') {
         }
     }));
 
-    Asena.addCommand({pattern: 'tts (!*)', fromMe: true, desc: Lang.TTS_DESC}, (async (message, match) => {
+    Asena.addCommand({pattern: 'tts (.*)', fromMe: true, desc: Lang.TTS_DESC}, (async (message, match) => {
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -122,17 +122,17 @@ if (config.WORKTYPE == 'private') {
             text: ttsMessage,
             voice: LANG
         });
-        await message.client.sendMessage(message.jid,buffer, MessageType.audio, {quoted: message.data}, {mimetype: Mimetype.mp4Audio, ptt: true});
+        await message.client.sendMessage(message.jid,buffer, MessageType.audio, {mimetype: Mimetype.mp4Audio, ptt: true});
     }));
 
-    Asena.addCommand({pattern: 'ytsong ?(!*)', fromMe: true, desc: Lang.SONG_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'song ?(.*)', fromMe: true, desc: Lang.SONG_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
             return;
         }
 
-        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_TEXT_SONG,MessageType.text, {quoted: message.data});    
+        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_TEXT_SONG,MessageType.text);    
         let arama = await yts(match[1]);
         arama = arama.all;
         if(arama.length < 1) return await message.client.sendMessage(message.jid,Lang.NO_RESULT,MessageType.text);
@@ -159,11 +159,11 @@ if (config.WORKTYPE == 'private') {
                 writer.addTag();
 
                 reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_SONG,MessageType.text);
-                await message.client.sendMessage(message.jid,Buffer.from(writer.arrayBuffer), MessageType.audio, {quoted: message.data}, {mimetype: Mimetype.mp4Audio, ptt: false});
+                await message.client.sendMessage(message.jid,Buffer.from(writer.arrayBuffer), MessageType.audio, {mimetype: Mimetype.mp4Audio, ptt: false});
             });
     }));
 
-    Asena.addCommand({pattern: 'ytvideo ?(!*)', fromMe: true, desc: Lang.VIDEO_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'video ?(.*)', fromMe: true, desc: Lang.VIDEO_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -185,11 +185,11 @@ if (config.WORKTYPE == 'private') {
 
         yt.on('end', async () => {
             reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_VIDEO,MessageType.text);
-            await message.client.sendMessage(message.jid,fs.readFileSync('./' + arama.videoId + '.mp4'), MessageType.video, {quoted: message.data}, {mimetype: Mimetype.mp4});
+            await message.client.sendMessage(message.jid,fs.readFileSync('./' + arama.videoId + '.mp4'), MessageType.video, {mimetype: Mimetype.mp4});
         });
     }));
 
-    Asena.addCommand({pattern: 'searchyt ?(!*)', fromMe: true, desc: Lang.YT_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'yt ?(.*)', fromMe: true, desc: Lang.YT_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -210,11 +210,11 @@ if (config.WORKTYPE == 'private') {
             mesaj += '*' + video.title + '* - ' + video.url + '\n'
         });
 
-        await message.client.sendMessage(message.jid,mesaj,MessageType.text, {quoted: message.data});
+        await message.client.sendMessage(message.jid,mesaj,MessageType.text);
         await reply.delete();
     }));
 
-    Asena.addCommand({pattern: 'wiki ?(!*)', fromMe: true, desc: Lang.WIKI_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'wiki ?(.*)', fromMe: true, desc: Lang.WIKI_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -228,11 +228,11 @@ if (config.WORKTYPE == 'private') {
             .page(match[1]);
 
         var info = await arama.rawContent();
-        await message.client.sendMessage(message.jid, info, MessageType.text, {quoted: message.data});
+        await message.client.sendMessage(message.jid, info, MessageType.text);
         await reply.delete();
     }));
 
-    Asena.addCommand({pattern: 'searchimg ?(!*)', fromMe: true, desc: Lang.IMG_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'img ?(.*)', fromMe: true, desc: Lang.IMG_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -254,7 +254,7 @@ if (config.WORKTYPE == 'private') {
         });
     }));
 
-    Asena.addCommand({ pattern: 'github ?(!*)', fromMe: true, desc: Glang.GİTHUB_DESC }, async (message, match) => {
+    Asena.addCommand({ pattern: 'github ?(.*)', fromMe: true, desc: Glang.GİTHUB_DESC }, async (message, match) => {
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -324,7 +324,7 @@ else if (config.WORKTYPE == 'public') {
             + '*◀️ ' + Lang.FROM + '*: ```' + (match[2] === '' ? config.LANG : match[2]) + '```\n'
             + '*🔎 ' + Lang.RESULT + ':* ```' + ceviri.text + '```');
         } else {
-            return await message.client.sendMessage(message.jid,Lang.TRANSLATE_ERROR,MessageType.text, {quoted: message.data})
+            return await message.client.sendMessage(message.jid,Lang.TRANSLATE_ERROR,MessageType.text)
         }
     }));
 
@@ -350,15 +350,15 @@ else if (config.WORKTYPE == 'public') {
         }
         catch(err) {
             if (err instanceof ExchangeRatesError) 
-                await message.client.sendMessage(message.jid,Lang.INVALID_CURRENCY,MessageType.text, {quoted: message.data})
+                await message.client.sendMessage(message.jid,Lang.INVALID_CURRENCY,MessageType.text)
             else {
-                await message.client.sendMessage(message.jid,Lang.UNKNOWN_ERROR,MessageType.text, {quoted: message.data})
+                await message.client.sendMessage(message.jid,Lang.UNKNOWN_ERROR,MessageType.text)
                 console.log(err)
             }
         }
     }));
 
-    Asena.addCommand({pattern: 'tts (!*)', fromMe: false, desc: Lang.TTS_DESC}, (async (message, match) => {
+    Asena.addCommand({pattern: 'tts (.*)', fromMe: false, desc: Lang.TTS_DESC}, (async (message, match) => {
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -386,21 +386,21 @@ else if (config.WORKTYPE == 'public') {
             text: ttsMessage,
             voice: LANG
         });
-        await message.client.sendMessage(message.jid,buffer, MessageType.audio, {quoted: message.data}, {mimetype: Mimetype.mp4Audio, ptt: true});
+        await message.client.sendMessage(message.jid,buffer, MessageType.audio, {mimetype: Mimetype.mp4Audio, ptt: true});
     }));
 
-    Asena.addCommand({pattern: 'ytsong ?(!*)', fromMe: false, desc: Lang.SONG_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'song ?(.*)', fromMe: false, desc: Lang.SONG_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
             return;
         }
 
-        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_TEXT_SONG,MessageType.text, {quoted: message.data});    
+        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_TEXT_SONG,MessageType.text);    
         let arama = await yts(match[1]);
         arama = arama.all;
         if(arama.length < 1) return await message.client.sendMessage(message.jid,Lang.NO_RESULT,MessageType.text);
-        var reply = await message.client.sendMessage(message.jid,Lang.DOWNLOADING_SONG,MessageType.text, {quoted: message.data});
+        var reply = await message.client.sendMessage(message.jid,Lang.DOWNLOADING_SONG,MessageType.text);
 
         let title = arama[0].title.replace(' ', '+');
         let stream = ytdl(arama[0].videoId, {
@@ -422,19 +422,19 @@ else if (config.WORKTYPE == 'public') {
                     });
                 writer.addTag();
 
-                reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_SONG,MessageType.text, {quoted: message.data});
-                await message.client.sendMessage(message.jid,Buffer.from(writer.arrayBuffer), MessageType.audio, {quoted: message.data}, {mimetype: Mimetype.mp4Audio, ptt: false});
+                reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_SONG,MessageType.text);
+                await message.client.sendMessage(message.jid,Buffer.from(writer.arrayBuffer), MessageType.audio, {mimetype: Mimetype.mp4Audio, ptt: false});
             });
     }));
 
-    Asena.addCommand({pattern: 'ytvideo ?(!*)', fromMe: false, desc: Lang.VIDEO_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'video ?(.*)', fromMe: false, desc: Lang.VIDEO_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
             return;
         }
 
-        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_VIDEO,MessageType.text, {quoted: message.data});    
+        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_VIDEO,MessageType.text);    
     
         try {
             var arama = await yts({videoId: ytdl.getURLVideoID(match[1])});
@@ -442,31 +442,31 @@ else if (config.WORKTYPE == 'public') {
             return await message.client.sendMessage(message.jid,Lang.NO_RESULT,MessageType.text);
         }
 
-        var reply = await message.client.sendMessage(message.jid,Lang.DOWNLOADING_VIDEO,MessageType.text, {quoted: message.data});
+        var reply = await message.client.sendMessage(message.jid,Lang.DOWNLOADING_VIDEO,MessageType.text);
 
         var yt = ytdl(arama.videoId, {filter: format => format.container === 'mp4' && ['720p', '480p', '360p', '240p', '144p'].map(() => true)});
         yt.pipe(fs.createWriteStream('./' + arama.videoId + '.mp4'));
 
         yt.on('end', async () => {
-            reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_VIDEO,MessageType.text, {quoted: message.data});
-            await message.client.sendMessage(message.jid,fs.readFileSync('./' + arama.videoId + '.mp4'), MessageType.video, {quoted: message.data}, {mimetype: Mimetype.mp4});
+            reply = await message.client.sendMessage(message.jid,Lang.UPLOADING_VIDEO,MessageType.text);
+            await message.client.sendMessage(message.jid,fs.readFileSync('./' + arama.videoId + '.mp4'), MessageType.video, {mimetype: Mimetype.mp4});
         });
     }));
 
-    Asena.addCommand({pattern: 'searchyt ?(!*)', fromMe: false, desc: Lang.YT_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'yt ?(.*)', fromMe: false, desc: Lang.YT_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
             return;
         }
 
-        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_WORDS,MessageType.text, {quoted: message.data});    
+        if (match[1] === '') return await message.client.sendMessage(message.jid,Lang.NEED_WORDS,MessageType.text);    
         var reply = await message.client.sendMessage(message.jid,Lang.GETTING_VIDEOS,MessageType.text);
 
         try {
             var arama = await yts(match[1]);
         } catch {
-            return await message.client.sendMessage(message.jid,Lang.NOT_FOUND,MessageType.text, {quoted: message.data});
+            return await message.client.sendMessage(message.jid,Lang.NOT_FOUND,MessageType.text);
         }
     
         var mesaj = '';
@@ -474,11 +474,11 @@ else if (config.WORKTYPE == 'public') {
             mesaj += '*' + video.title + '* - ' + video.url + '\n'
         });
 
-        await message.client.sendMessage(message.jid,mesaj,MessageType.text, {quoted: message.data});
+        await message.client.sendMessage(message.jid,mesaj,MessageType.text);
         await reply.delete();
     }));
 
-    Asena.addCommand({pattern: 'wiki ?(!*)', fromMe: false, desc: Lang.WIKI_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'wiki ?(.*)', fromMe: false, desc: Lang.WIKI_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -496,7 +496,7 @@ else if (config.WORKTYPE == 'public') {
         await reply.delete();
     }));
 
-    Asena.addCommand({pattern: 'searchimg ?(!*)', fromMe: false, desc: Lang.IMG_DESC}, (async (message, match) => { 
+    Asena.addCommand({pattern: 'img ?(.*)', fromMe: false, desc: Lang.IMG_DESC}, (async (message, match) => { 
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
@@ -518,7 +518,7 @@ else if (config.WORKTYPE == 'public') {
         });
     }));
 
-    Asena.addCommand({ pattern: 'github ?(!*)', fromMe: false, desc: Glang.GİTHUB_DESC }, async (message, match) => {
+    Asena.addCommand({ pattern: 'github ?(.*)', fromMe: false, desc: Glang.GİTHUB_DESC }, async (message, match) => {
 
         if (message.jid === '905524317852-1612300121@g.us') {
 
